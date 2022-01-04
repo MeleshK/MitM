@@ -18,7 +18,7 @@ class AnalysisFlow(mitmproxy.flow.Flow):
 	def get_address(self):
 		return self.raw_flow.server_conn.address[0]
 
-	def getPort(self):
+	def get_port(self):
 		return self.raw_flow.server_conn.address[1]
 
 	def get_request_headers(self):

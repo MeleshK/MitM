@@ -468,7 +468,7 @@ def checkFlowResults(result_type, results):
 def syncSource(flow, results):
     for item in results:
         item.source = flow.get_source()
-        item.syncSourceLog()
+        item.sync_source_log()
     return
 
 
