@@ -7,6 +7,7 @@ import socket
 # import time
 # import ipaddress
 # import pandas as pd
+import domain_utils as du
 import AndroidDataPrivacy.AppFinder as AppFinder
 import AndroidDataPrivacy.Applications.AndroidNative as AndroidNative
 import AndroidDataPrivacy.Applications.AppDefault as AppDefault
@@ -122,46 +123,6 @@ def check_flow(flow_item):
 		AppDefault.checkBehavior(flow_item, results)
 		flowCountList[appList.index('Unknown')] += 1
 	AppDefault.syncSource(flow_item, results)
-	send_logs(results)
-	return
-
-
-def send_logs(send_results):
-	for result in send_results:
-		log.send(result.logFull, syslog_client.Level.INFO)
-	return
-
-
-def print_logs(log_results):
-	print('\n')
-	count = 0
-	for result in log_results:
-		count += 1
-		source = result.get_source()
-		destination = result.get_destination()
-		print('Record log #' + str(count) + ' of ' + str(len(results)))
-		print('Application: ' + result.get_app())
-		try:
-			print('Source      IP: ' + source + '\tHost: ' + str(socket.gethostbyaddr(source)[0]))
-		except:	 # noinspection PyBroadException
-			print('Source      IP: ' + source)
-		try:
-			print('Destination IP: ' + destination + '\tHost: ' + str(socket.gethostbyaddr(destination)[0]))
-		except:	 # noinspection PyBroadException
-			print('Destination IP: ' + destination)
-		print('Type: ' + result.get_type())
-		print('Info: ' + result.get_info())
-		print()
-	return
-
-
-def plot_flows():
-	plt.title('Flows per Application')
-	plt.bar(appList, flowCountList)
-
-	plt.xlabel('Application')
-	plt.ylabel('Flow count')
-	plt.show()
 	return
 
 
@@ -180,29 +141,23 @@ def save_results(log_results):
 	save_file_name = os.path.splitext(filename)[0]
 	save_file_name = os.path.basename(save_file_name)
 
-	# create dataframe for results and exceptions
-	# results_df = pd.DataFrame(columns=['Application', 'Source', 'Host', 'Destination', 'Type', 'Info', 'Host'])
-	# exceptions_df = pd.DataFrame(columns=['Application', 'Source', 'Host', 'Destination', 'Type', 'Info'])
-
 	with open(save_file_name + '.csv', mode='w') as results_file:
 		results_writer = csv.writer(results_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		results_writer.writerow(['Application', 'URL', 'Source', 'Host', 'Destination', 'Type', 'Info'])
+		results_writer.writerow(['Application', 'URL', 'TLD', 'Source', 'Host', 'Destination', 'Type', 'Info'])
 		for result in log_results:
-			source_string = result.get_url()
+			source_string = result.get_source()
 			try:
 				host_string = str(socket.gethostbyaddr(result.get_source())[0])
 			except:  # noinspection PyBroadException
 				host_string = ''
 
 			info_string = result.get_info()
-			results_writer.writerow([result.get_app(), result.get_url(), source_string, host_string, result.get_destination(), result.get_type(), info_string])
+			results_writer.writerow([result.get_app(), result.get_url(), du.get_etld1(result.get_url()), source_string, host_string, result.get_destination(), result.get_type(), info_string])
 
 
 for filename in filenames:
 	load_file(filename)
 	# printFlows()
 	analyze_all()
-	# print_logs(results)
-	# plot_flows()
 	save_results(results)
-	# findNewFlows()
+
