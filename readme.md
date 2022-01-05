@@ -1,9 +1,10 @@
-MitMAnalysis
+MitM Analysis
 Based off https://github.com/tkennedy3159/Android-Privacy-Analyzer
 
-MitMproxy analysis
+mitmproxy analysis
 
 Files
+
 1_Analysis.py  - opens mitmproxy capture files and saves to a CSV
 2_Analysis.py  -       
 cleanfiles.sh  - removes all 
