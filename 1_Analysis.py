@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import os
 import csv
 import socket
@@ -62,6 +61,7 @@ def load_file(file_to_load):
 			# print(flow.request.url)
 	return
 
+
 def analyse_flow(flow_item):
 	new_result = Result.Result(flow_item)
 	new_result.app = flow_item.app
@@ -94,7 +94,6 @@ def check_flow(flow_item):
 def analyze_all():
 	count = 0
 	for flow_item in flows:
-		# print(count)
 		analyse_flow(flow_item)
 		count = count + 1
 	print('\n')
@@ -128,7 +127,5 @@ if __name__ == '__main__':
 	for filename in filenames:
 		results.clear()
 		load_file(filename)
-		# printFlows()
 		analyze_all()
 		save_results(results)
-
