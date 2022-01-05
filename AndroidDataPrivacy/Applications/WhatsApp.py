@@ -99,10 +99,10 @@ def checkBehavior(flow, results):
 def analyzeGetRequest(flow, results):
 	checkGetURL(flow, results)
 	checkRequestHeaders(flow, flow.get_request_headers(), results)
-	AppDefault.checkRequestHeadersDefault(flow, flow.get_request_headers(), results)
+	# AppDefault.checkRequestHeadersDefault(flow, flow.get_request_headers(), results)
 	checkResponseHeaders(flow, flow.get_response_headers(), results)
-	AppDefault.checkResponseHeadersDefault(flow, flow.get_response_headers(), results)
-	AppDefault.analyzeGetRequestDefault(flow, results)
+	# AppDefault.checkResponseHeadersDefault(flow, flow.get_response_headers(), results)
+	# AppDefault.analyzeGetRequestDefault(flow, results)
 	return
 
 def analyzePostRequest(flow, results):

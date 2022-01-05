@@ -465,13 +465,6 @@ def checkFlowResults(result_type, results):
     return False
 
 
-def syncSource(flow, results):
-    for item in results:
-        item.source = flow.get_source()
-        item.sync_source_log()
-    return
-
-
 def cleanEncoding(input_string):
     output = ''
     while (len(input_string) >= 4):
