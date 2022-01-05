@@ -107,7 +107,7 @@ def save_results(log_results):
 	save_file_name = os.path.basename(save_file_name)
 
 	print("\nSaving to " + save_file_name)
-	with open(save_file_name + '.csv', mode='w') as results_file:
+	with open("Output/Stage1/" + save_file_name + '.csv', mode='w') as results_file:
 		results_writer = csv.writer(results_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 		results_writer.writerow(['Application', 'URL', 'TLD', 'Source', 'Host', 'Destination', 'Info'])
 		for result in log_results:
@@ -124,7 +124,7 @@ def save_results(log_results):
 
 
 if __name__ == '__main__':
-	filenames = glob.glob(r"*.cap")
+	filenames = glob.glob(r"Capture/*.cap")
 	for filename in filenames:
 		results.clear()
 		load_file(filename)
