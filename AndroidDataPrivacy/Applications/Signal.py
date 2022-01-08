@@ -89,9 +89,9 @@ urls = ['http://ns.adobe.com/xap/1.0/',
 
 partialURLs = []
 
-userAgents = ['org.thoughtcrime.securesms']
+userAgents = ['org.thoughtcrime.securesms', ]
 
-partialUserAgents = []
+partialUserAgents = ['Signal']
 
 
 def checkBehavior(flow, results):

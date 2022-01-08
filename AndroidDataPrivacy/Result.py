@@ -2,6 +2,8 @@ class Result:
 
 	app = ''
 	url = ''
+	host = ''
+	useragent = ''
 	source = ''
 	destination = ''
 	type = ''
@@ -13,7 +15,9 @@ class Result:
 	def __init__(self, flow):
 		self.app = flow.app
 		self.url = flow.get_url()
-		self.source = flow.get_host()
+		self.host = flow.get_host()
+		self.useragent = flow.get_user_agent()
+		self.source = flow.get_source()
 		self.destination = flow.get_destination()
 		self.type = flow.get_type()
 		self.info = flow.get_user_agent()

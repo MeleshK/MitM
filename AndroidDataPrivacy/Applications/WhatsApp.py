@@ -80,7 +80,7 @@ partialURLs = []
 
 userAgents = ['com.whatsapp']
 
-partialUserAgents = ['WAChat']
+partialUserAgents = ['WAChat', 'WhatsApp']
 
 
 def checkBehavior(flow, results):

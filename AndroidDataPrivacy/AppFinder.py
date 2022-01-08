@@ -2,11 +2,7 @@
 # import AndroidDataPrivacy.Result as Result
 
 
-def find_app(flow, app_list):
-	# requestHeaders = flow.get_request_headers()
-	# url = flow.raw_flow.request.pretty_host
-	# flow.raw_flow.request.user
-	useragent = flow.get_user_agent()
+def find_app(flow, app_list, useragent):
 	useragent_string = str(useragent[1])
 	flow.user_agent = useragent_string
 	app = ''
@@ -18,6 +14,9 @@ def find_app(flow, app_list):
 			app = application
 		else:
 			app = ''
+
+	if '' == app:
+		app = identify_user_agent(useragent_string, app_list)
 	flow.app = app
 	return app
 

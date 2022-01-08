@@ -7,6 +7,7 @@ class AnalysisFlow(mitmproxy.flow.Flow):
 	app = ''
 	user_agent = ''
 	url = ''
+	host = ''
 	flowtype = ''
 
 	def __init__(self):
@@ -27,11 +28,16 @@ class AnalysisFlow(mitmproxy.flow.Flow):
 	def get_response_headers(self):
 		try:
 			return self.raw_flow.response.headers
+		# noinspection PyBroadException
 		except:
 			return
 
 	def import_raw_flow(self, flow):
 		self.raw_flow = flow
+
+	def get_host(self):
+		self.host = str(self.raw_flow.request.pretty_host)
+		return str(self.raw_flow.request.pretty_host)
 
 	def get_source(self):
 		return str(self.raw_flow.server_conn.address[0])
@@ -63,7 +69,6 @@ class AnalysisFlow(mitmproxy.flow.Flow):
 			for field in self.raw_flow.request.headers.fields:
 				if field[0] == b'User-Agent':
 					return field
-
 
 	def get_metadata(self):
 		return self.raw_flow.metadata

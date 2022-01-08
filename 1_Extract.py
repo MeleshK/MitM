@@ -50,6 +50,7 @@ def load_file(file_to_load):
 				try:
 					app = AppFinder.find_app(HTTPFlow, appList, str(new_flow.user_agent[1]))
 					new_flow.app = app
+
 				except TypeError:
 					new_flow.app = 'Unknown'
 				# noinspection PyBroadException
@@ -64,7 +65,7 @@ def load_file(file_to_load):
 
 def analyse_flow(flow_item):
 	new_result = Result.Result(flow_item)
-	new_result.app = flow_item.app
+	new_result.app = 	check_app(flow_item)
 	results.append(new_result)
 	return
 
@@ -91,6 +92,52 @@ def check_flow(flow_item):
 	return
 
 
+def check_app(flow_item):
+	user_agent = str(flow_item.get_user_agent())
+	app = ""
+	if 'GSuite' in appList:
+		for search_string in GSuite.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'GSuite'
+	if 'FDroid' in appList:
+		for search_string in FDroid.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'FDroid'
+	if 'Session' in appList:
+		for search_string in Session.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'Session'
+	if 'Signal' in appList:
+		for search_string in Signal.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'Signal'
+	if 'Telegram' in appList:
+		for search_string in Telegram.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'Telegram'
+	if 'WhatsApp' in appList:
+		for search_string in WhatsApp.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'WhatsApp'
+	if 'Wire' in appList:
+		for search_string in Wire.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'Wire'
+	if 'AndroidNative' in appList:
+		for search_string in AndroidNative.partialUserAgents:
+			x=user_agent.find(search_string)
+			if(x==search_string):
+				app = 'AndroidNative'
+	return app
+
+
 def analyze_all():
 	count = 0
 	for flow_item in flows:
@@ -108,22 +155,21 @@ def save_results(log_results):
 	print("\nSaving to " + save_file_name)
 	with open("Output/Stage1/" + save_file_name + '.csv', mode='w') as results_file:
 		results_writer = csv.writer(results_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		results_writer.writerow(['Application', 'URL', 'TLD', 'Source', 'Host', 'Destination', 'Info'])
+		results_writer.writerow(['Application', 'URL', 'TLD', 'Source', 'UserAgent', 'Host', 'Destination', 'Info'])
 		for result in log_results:
-			source_string = result.get_source()
 			try:
 				host_string = str(socket.gethostbyaddr(result.get_source())[0])
 			except:  # noinspection PyBroadException
 				host_string = ''
 			url_string = result.get_url();
 			tld_string = du.get_etld1(url_string)
-
 			info_string = result.get_info()
-			results_writer.writerow([result.get_app(), url_string, tld_string,  source_string, host_string, result.get_destination(), info_string])
+			results_writer.writerow([result.get_app(), url_string, tld_string,  result.get_source(), result.useragent,
+									 host_string, result.get_destination(), info_string])
 
 
 if __name__ == '__main__':
-	filenames = glob.glob(r"Capture/*.cap")
+	filenames = sorted(glob.glob(r"Capture/*.cap"))
 	for filename in filenames:
 		results.clear()
 		load_file(filename)
