@@ -56,7 +56,6 @@ def func_get_tld_info(list_of_tld):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     cwd = os.getcwd()
-    print(cwd)
     filenames = sorted(glob.glob(cwd + '/Output/Stage1/*.csv'))
     for file in filenames:
         # Extract filename for saving files

@@ -68,7 +68,7 @@ class AnalysisFlow(mitmproxy.flow.Flow):
 		if self.flowtype == 'http':
 			for field in self.raw_flow.request.headers.fields:
 				if field[0] == b'User-Agent':
-					return field
+					return field[1]
 
 	def get_metadata(self):
 		return self.raw_flow.metadata
