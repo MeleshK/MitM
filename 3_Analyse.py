@@ -95,18 +95,22 @@ if __name__ == '__main__':
                     f.write(str(unique_values_counts[iterator]))
                     iterator += 1
                 f.write("\n")
-                if ("URL" == column) & len(unique_values) > 1:
-                    title_string = str(filename.replace("_"," " ) + " - " + column)
-                    # bar graph
-                    fig = column_df.plot(kind="bar", title=title_string, figsize=(15, 15), legend=False, xlabel=column, ylabel="Frequency").get_figure()
-                    fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_bar_graph.png",
-                                bbox_inches='tight', dpi=1200)
+                if len(unique_values) > 1:
+                    if column != "URL":
+                        print("Preparing " + column + " bar graph")
+                        title_string = str(filename.replace("_"," " ) + " - " + column)
+                        # bar graph
+                        fig = column_df.plot(kind="bar", title=title_string, figsize=(15, 15), legend=False, xlabel=column, ylabel="Frequency").get_figure()
+                        fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_bar_graph.png",
+                                    bbox_inches='tight', dpi=1200)
+                        matplotlib.pyplot.close(fig)
 
-                    # Pie graph
-                    pie = column_df.plot.pie(subplots=True, title=title_string, figsize=(15, 15), ylabel='', legend=False)
-                    fig = pie[0].get_figure()
-                    fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_pie_graph.png",
-                                bbox_inches='tight', dpi=1200)
-                    # Need to close the figure otherwise it will use up memory for no benefit.
-                    matplotlib.pyplot.close(fig)
+                        print("Preparing " + column + " pie graph")
+                        # Pie graph
+                        pie = column_df.plot.pie(subplots=True, title=title_string, figsize=(15, 15), ylabel='', legend=False)
+                        fig = pie[0].get_figure()
+                        fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_pie_graph.png",
+                                    bbox_inches='tight', dpi=1200)
+                        # Need to close the figure otherwise it will use up memory for no benefit.
+                        matplotlib.pyplot.close(fig)
             f.close()
