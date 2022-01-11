@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir Capture
 mkdir Output
 mkdir Output/Stage1/
 mkdir Output/Stage2/
