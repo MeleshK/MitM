@@ -37,6 +37,7 @@ appList = [
 
 
 def load_file(file_to_load):
+	print("\nOpening " + file_to_load)
 	with open(file_to_load, 'rb') as fp:
 		reader = FlowReader(fp)
 
@@ -155,7 +156,7 @@ def save_results(log_results):
 	print("\nSaving to " + save_file_name)
 	with open("Output/Stage1/" + save_file_name + '.csv', mode='w') as results_file:
 		results_writer = csv.writer(results_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-		results_writer.writerow(['Application', 'URL', 'TLD', 'Source', 'UserAgent', 'Host', 'Destination', 'Info'])
+		results_writer.writerow(['Application', 'URL', 'TLD', 'UserAgent', 'Host',  'Metadata'])
 		for result in log_results:
 			try:
 				host_string = str(socket.gethostbyaddr(result.get_source())[0])
@@ -163,15 +164,16 @@ def save_results(log_results):
 				host_string = ''
 			url_string = result.get_url();
 			tld_string = du.get_etld1(url_string)
-			info_string = result.get_info()
-			results_writer.writerow([result.get_app(), url_string, tld_string,  result.get_source(), result.useragent,
-									 host_string, result.get_destination(), info_string])
+			metadata_string = result.get_metadata()
+			results_writer.writerow([result.get_app(), url_string, tld_string,  result.useragent,
+									 host_string,  metadata_string])
 
 
 if __name__ == '__main__':
 	filenames = sorted(glob.glob(r"Capture/*.cap"))
 	for filename in filenames:
 		results.clear()
+		flows.clear()
 		load_file(filename)
 		analyze_all()
 		save_results(results)

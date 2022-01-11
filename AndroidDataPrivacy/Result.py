@@ -7,7 +7,7 @@ class Result:
 	source = ''
 	destination = ''
 	type = ''
-	info = ''
+	metadata = ''
 	flowContent = ''
 	log = ''
 	logFull = ''
@@ -20,7 +20,7 @@ class Result:
 		self.source = flow.get_source()
 		self.destination = flow.get_destination()
 		self.type = flow.get_type()
-		self.info = flow.get_user_agent()
+		self.metadata = flow.get_metadata()
 		self.flowContent = flow.raw_flow.request.content
 		self.log = flow.get_source()
 		self.destination = flow.get_destination()
@@ -39,8 +39,8 @@ class Result:
 	def get_type(self):
 		return self.type
 
-	def get_info(self):
-		return str(self.info)
+	def get_metadata(self):
+		return str(self.metadata)
 
 	def get_flow_content(self):
 		return self.flowContent
