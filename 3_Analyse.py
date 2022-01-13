@@ -35,14 +35,12 @@ def func_get_tld_info(l_filename, list_of_tld):
                         {'TLD': tld, 'Organization': domain.registrant, 'Country': domain.registrant_country},
                         ignore_index=True)
                     i_count = constants.WHOIS_LOOKUP_COUNT
-                # noinspection PyBroadException
-                except:     # noinspection PyBroadException
-                    print("Error with Whois lookup. Waiting " + str(t_sec) + " seconds")
-                    if (constants.WHOIS_LOOKUP_COUNT-1) == i_count:
-                        exit(-1)
+                except whois.UnknownTld:
+                    print("Unknown TLD")
+                    exit(-1)
                 time.sleep(t_sec)  # need a slight delay between requests for WHOIS info
                 i_count += 1
-    tld_data.to_csv(cwd + "/Output/Stage2/Host_Info/" + l_filename + '.csv', index=False)
+    tld_data.to_csv(l_filename + '.csv', index=False)
     return tld_data
 
 
@@ -64,8 +62,16 @@ if __name__ == '__main__':
         for filter_string in constants.IGNORE_LIST:
             mitm_data = mitm_data[mitm_data.TLD != filter_string]
 
-        # Save summary file with
-        with open(cwd + '/Output/Stage2/Summary/' + filename + '.txt', 'w') as f:
+        path = os.path.join(cwd + "/Output/Stage2/", filename)
+        # make a folder for the results
+        try:
+            os.mkdir(path)
+            os.mkdir(path+"/Images")
+        except OSError as error:
+            print(error)
+
+        # Save summary file
+        with open(path + "/" + filename + '_Summary.txt', 'w') as f:
             if constants.LOOKUP_TLD_INFO:
                 # create two empty columns for Organisation and Country Info
                 mitm_data['Organization'] = ""
@@ -79,10 +85,10 @@ if __name__ == '__main__':
 
 #                column_df = pd.DataFrame(list(zip(unique_values, unique_values_counts)), columns=[column, 'Frequency'])
                 column_df = pd.DataFrame(unique_values_counts, index=unique_values)
-                column_df.to_csv(cwd + "/Output/Stage2/Field_Data/" + filename + "_" + column + ".csv")
+                column_df.to_csv(path + "/" + filename + "_" + column + ".csv")
 
                 if ("TLD" == column) & constants.LOOKUP_TLD_INFO:
-                    tld_info = func_get_tld_info(filename, unique_values)
+                    tld_info = func_get_tld_info(path, unique_values)
 
                     # loop through whois info setting country and organisation data
                     for ind in tld_info.index:
@@ -104,7 +110,7 @@ if __name__ == '__main__':
                             # bar graph
                             fig = column_df.plot(kind="bar", title=title_string, figsize=(15, 15), legend=False,
                                                  xlabel=column, ylabel="Frequency").get_figure()
-                            fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_bar_graph.png",
+                            fig.savefig(path + "/Images/" + filename + "_" + column + "_bar_graph.png",
                                         bbox_inches='tight', dpi=600)
                             matplotlib.pyplot.close(fig)
 
@@ -113,7 +119,7 @@ if __name__ == '__main__':
                             pie = column_df.plot.pie(subplots=True, title=title_string, figsize=(15, 15), ylabel='',
                                                      legend=False)
                             fig = pie[0].get_figure()
-                            fig.savefig(cwd + "/Output/Stage2/Images/" + filename + "_" + column + "_pie_graph.png",
+                            fig.savefig(path + "/Images/" + filename + "_" + column + "_pie_graph.png",
                                         bbox_inches='tight', dpi=600)
                             # Need to close the figure otherwise it will use up memory for no benefit.
                             matplotlib.pyplot.close(fig)
